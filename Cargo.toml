@@ -1,6 +1,6 @@
 [package]
 name = "masp"
 version = "0.1.0"
-authors = ["cfrankovich"]
+authors = ["carson"]
 
 [dependencies]
