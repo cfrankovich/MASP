@@ -1,14 +1,17 @@
 use std::io;
 use std::io::Write;
+use std::collections::HashMap;
+use std::str::SplitWhitespace;
 
 enum CommandTypes {
     OK,
     ParenthesisMismatch,
     NotEnclosed,
     InvalidCommand,
+    InvalidArgs,
 }
 
-fn get_command_word(command: &String) -> String {
+fn get_command_info(command: &String) -> (String, usize) {
     let bytes = command.as_bytes();
     let mut word: String = String::new();
     for i in 1..command.len()-1 {
@@ -18,7 +21,8 @@ fn get_command_word(command: &String) -> String {
         }
         word.push_str(&c.to_string());
     }
-    return String::from(word);
+    let split: SplitWhitespace = command.split_whitespace();
+    return (String::from(word), split.count());
 }
 
 fn is_valid_command(command: &String) -> CommandTypes {
@@ -40,15 +44,18 @@ fn is_valid_command(command: &String) -> CommandTypes {
     }
 
     /* check list of commands */ 
-    let command_word: String = get_command_word(&command); 
-    const NUM_COMMANDS: usize = 2;
-    const COMMAND_LIST: [&str; NUM_COMMANDS] = [
-        "exit",
-        "ping",
-    ];
-    for com in COMMAND_LIST {
-        if com.eq(&command_word) {
-            return CommandTypes::OK;
+    let command_info: (String, usize) = get_command_info(&command); 
+    let command_list: HashMap<&str,usize> = HashMap::from([
+        ("exit", 0),
+        ("ping", 0),
+    ]);
+    for com in command_list {
+        if com.0.eq(&command_info.0) {
+            if com.1 == command_info.1-1 {
+                return CommandTypes::OK;
+            } else {
+                return CommandTypes::InvalidArgs;
+            }
         }
     }
 
@@ -70,7 +77,10 @@ fn main() {
         let mut fullcommand: String = String::new();
         io::stdin()
             .read_line(&mut fullcommand)
-            .expect("Failed to read line.");
+            .expect("[Error] Failed to read line.");
+        if fullcommand.eq("\n") {
+            continue;
+        }
 
         match is_valid_command(&fullcommand) {
             CommandTypes::OK => execute_command(fullcommand),
@@ -82,6 +92,9 @@ fn main() {
             },
             CommandTypes::InvalidCommand => {
                 eprintln!("[Error] Invalid command.");
+            },
+            CommandTypes::InvalidArgs => {
+                eprintln!("[Error] Invalid number of arguments.");
             },
         }
     }
