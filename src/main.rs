@@ -1,7 +1,17 @@
+/*
+ * The Macro and Statistical Programming Language. This is still in development and serves as a
+ * side project to learn rust.
+ *
+ * For additional documentation visit: https://github.com/cfrankovich/masp
+*/
+
 use std::io;
 use std::io::Write;
 use std::collections::HashMap;
 use std::str::SplitWhitespace;
+
+mod masp_command_executor;
+mod masp_stdlib;
 
 enum CommandTypes {
     OK,
@@ -10,6 +20,14 @@ enum CommandTypes {
     InvalidCommand,
     InvalidArgs,
 }
+
+struct Libs {
+    stnd: bool,
+}
+
+static INCLUDED_LIBS: Libs = Libs {
+    stnd: true,
+};
 
 fn get_command_info(command: &String) -> (String, usize) {
     let bytes = command.as_bytes();
@@ -43,15 +61,23 @@ fn is_valid_command(command: &String) -> CommandTypes {
         return CommandTypes::NotEnclosed;
     }
 
-    /* check list of commands */ 
-    let command_info: (String, usize) = get_command_info(&command); 
-    let command_list: HashMap<&str,usize> = HashMap::from([
-        ("exit", 0),
-        ("ping", 0),
+
+    /* check if command exists and has correct args */
+    /* 0: inf args allowed */ 
+    /* 1: just one arg (itself) */ 
+    let command_list: HashMap<&str, usize> = HashMap::from([
+        ("exit", 1),
+        ("+", 0), /* aka: add */
+        ("-", 0), /* aka: subtract */
+        ("*", 0), /* aka: multiply */
+        ("/", 3), /* aka: divide */
+        ("%", 3), /* aka: modulo */
     ]);
+    let command_info: (String, usize) = get_command_info(&command); 
+
     for com in command_list {
         if com.0.eq(&command_info.0) {
-            if com.1 == command_info.1-1 {
+            if com.1 == command_info.1 || com.1 == 0 {
                 return CommandTypes::OK;
             } else {
                 return CommandTypes::InvalidArgs;
@@ -60,10 +86,6 @@ fn is_valid_command(command: &String) -> CommandTypes {
     }
 
     return CommandTypes::InvalidCommand;
-}
-
-fn execute_command(_command: String) {
-
 }
 
 fn main() {
@@ -83,7 +105,7 @@ fn main() {
         }
 
         match is_valid_command(&fullcommand) {
-            CommandTypes::OK => execute_command(fullcommand),
+            CommandTypes::OK => masp_command_executor::execute_command(fullcommand),
             CommandTypes::ParenthesisMismatch => {
                 eprintln!("[Error] Parenthesis mismatch.");
             },
@@ -98,5 +120,4 @@ fn main() {
             },
         }
     }
-
 }
