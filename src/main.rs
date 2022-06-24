@@ -1,8 +1,6 @@
 /*
- * The Macro and Statistical Programming Language. This is still in development and serves as a
- * side project to learn rust.
- *
- * For additional documentation visit: https://github.com/cfrankovich/masp
+ * The Macro and Statistical Programming Language Source Code
+ * Created by Carson Frankovich
 */
 
 use std::io;
@@ -10,10 +8,10 @@ use std::io::Write;
 use std::collections::HashMap;
 use std::str::SplitWhitespace;
 
-mod masp_command_executor;
+mod command_executor;
 mod masp_stdlib;
 
-enum CommandTypes {
+pub enum CommandTypes {
     OK,
     ParenthesisMismatch,
     NotEnclosed,
@@ -61,8 +59,10 @@ fn is_valid_command(command: &String) -> CommandTypes {
         return CommandTypes::NotEnclosed;
     }
 
+    return check_command_and_args(command);
+}
 
-    /* check if command exists and has correct args */
+pub fn check_command_and_args(command: &String) -> CommandTypes {
     /* 0: inf args allowed */ 
     /* 1: just one arg (itself) */ 
     let command_list: HashMap<&str, usize> = HashMap::from([
@@ -70,11 +70,11 @@ fn is_valid_command(command: &String) -> CommandTypes {
         ("+", 0), /* aka: add */
         ("-", 0), /* aka: subtract */
         ("*", 0), /* aka: multiply */
-        ("/", 3), /* aka: divide */
+        ("/", 0), /* aka: divide */
         ("%", 3), /* aka: modulo */
+        ("help", 2),
     ]);
     let command_info: (String, usize) = get_command_info(&command); 
-
     for com in command_list {
         if com.0.eq(&command_info.0) {
             if com.1 == command_info.1 || com.1 == 0 {
@@ -84,7 +84,6 @@ fn is_valid_command(command: &String) -> CommandTypes {
             }
         }
     }
-
     return CommandTypes::InvalidCommand;
 }
 
@@ -105,7 +104,7 @@ fn main() {
         }
 
         match is_valid_command(&fullcommand) {
-            CommandTypes::OK => masp_command_executor::execute_command(fullcommand),
+            CommandTypes::OK => command_executor::execute_command(fullcommand),
             CommandTypes::ParenthesisMismatch => {
                 eprintln!("[Error] Parenthesis mismatch.");
             },

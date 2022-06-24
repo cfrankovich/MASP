@@ -7,6 +7,7 @@
 use INCLUDED_LIBS;
 use get_command_info;
 use masp_stdlib;
+use SplitWhitespace;
 
 pub fn execute_command(command: String) {
     /* any better way to do this? actually curious */
@@ -35,6 +36,16 @@ pub fn execute_command(command: String) {
         }
         else if &command_info.0 == "%" {
             masp_stdlib::modulo();
+            return;
+        }
+        else if &command_info.0 == "help" {
+            let subcommand: &str = &command[1..command.len()-2];
+            let mut split: SplitWhitespace = subcommand.split_whitespace();  
+            split.next();
+            match split.next() {
+                Some(arg) => masp_stdlib::help(&arg),
+                None => return,
+            }
             return;
         }
     }
