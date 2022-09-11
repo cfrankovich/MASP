@@ -25,10 +25,18 @@ pub fn exit() {
 */
 pub fn add(command: String) -> f32 {
     let mut vec: Vec<f32> = vec![];
+    let mut typeerror: bool = false;
     let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
     for itr in 2..split.len()-1 {
-        vec.push(split[itr].parse::<f32>().unwrap());
+        vec.push(split[itr].parse::<f32>().unwrap_or_else(|_| {
+            typeerror = true;
+            return 0.0;
+        }));
     }
+    if typeerror { 
+        println!("[Error] Invalid argument(s) type.");
+        return 0.0; 
+    } 
     let mut sum: f32 = 0.0;
     for number in vec.iter() {
         sum += number;
@@ -43,9 +51,17 @@ pub fn add(command: String) -> f32 {
 */
 pub fn subtract(command: String) -> f32{
     let mut vec: Vec<f32> = vec![];
+    let mut typeerror: bool = false;
     let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
     for itr in 2..split.len()-1 {
-        vec.push(split[itr].parse::<f32>().unwrap());
+        vec.push(split[itr].parse::<f32>().unwrap_or_else(|_| {
+            typeerror = true;
+            return 0.0;
+        }));
+    }
+    if typeerror {
+        println!("[Error] Invalid argument(s) type.");
+        return 0.0; 
     }
     let mut dif: f32 = vec[0] * 2.0;
     for number in vec.iter() {
@@ -61,9 +77,17 @@ pub fn subtract(command: String) -> f32{
 */
 pub fn multiply(command: String) -> f32 {
     let mut vec: Vec<f32> = vec![];
+    let mut typeerror: bool = false;
     let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
     for itr in 2..split.len()-1 {
-        vec.push(split[itr].parse::<f32>().unwrap());
+        vec.push(split[itr].parse::<f32>().unwrap_or_else(|_| {
+            typeerror = true;
+            return 0.0;
+        }));
+    }
+    if typeerror { 
+        println!("[Error] Invalid argument(s) type.");
+        return 0.0; 
     }
     let mut product: f32 = 1.0;
     for number in vec.iter() {
@@ -79,9 +103,17 @@ pub fn multiply(command: String) -> f32 {
 */
 pub fn divide(command: String) -> f32 {
     let mut vec: Vec<f32> = vec![];
+    let mut typeerror: bool = false;
     let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
     for itr in 2..split.len()-1 {
-        vec.push(split[itr].parse::<f32>().unwrap());
+        vec.push(split[itr].parse::<f32>().unwrap_or_else(|_| {
+            typeerror = true;
+            return 0.0;
+        }));
+    }
+    if typeerror { 
+        println!("[Error] Invalid argument(s) type.");
+        return 0.0; 
     }
     let mut quotient: f32 = vec[0];
     vec.remove(0);
@@ -98,8 +130,20 @@ pub fn divide(command: String) -> f32 {
 */
 pub fn modulo(command: String) -> f32 {
     let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
-    let num1: f32 = split[2].parse::<f32>().unwrap();
-    let num2: f32 = split[3].parse::<f32>().unwrap();
+    let mut typeerror: bool = false;
+    let num1: f32 = split[2].parse::<f32>().unwrap_or_else(|_| {
+            typeerror = true;
+            return 0.0;
+    });
+    let num2: f32 = split[3].parse::<f32>().unwrap_or_else(|_| {
+            typeerror = true;
+            return 0.0;
+    });
+    /* how do i return out of the unwrap or else D: */
+    if typeerror { 
+        println!("[Error] Invalid argument(s) type.");
+        return 0.0; 
+    }
 
     println!("{}", num1 % num2);
     return num1 % num2;
