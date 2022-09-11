@@ -54,7 +54,7 @@ fn is_valid_command(command: &String) -> CommandTypes {
     }
 
     let first_char: char = command.as_bytes()[0] as char;
-    let last_char: char = command.as_bytes()[command.len()-2] as char;
+    let last_char: char = command.as_bytes()[command.len()-3] as char;
     if first_char != '(' || last_char != ')' {
         return CommandTypes::NotEnclosed;
     }

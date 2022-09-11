@@ -23,40 +23,86 @@ pub fn exit() {
  * Info: adds numbers together
  * Args (inf): the numbers to add 
 */
-pub fn add() {
-
+pub fn add(command: String) -> f32 {
+    let mut vec: Vec<f32> = vec![];
+    let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
+    for itr in 2..split.len()-1 {
+        vec.push(split[itr].parse::<f32>().unwrap());
+    }
+    let mut sum: f32 = 0.0;
+    for number in vec.iter() {
+        sum += number;
+    }
+    println!("{}", sum);
+    return sum;
 }
 
 /*
  * Info: subtracts numbers together
  * Args (inf): the numbers to subtract 
 */
-pub fn subtract() {
-
+pub fn subtract(command: String) -> f32{
+    let mut vec: Vec<f32> = vec![];
+    let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
+    for itr in 2..split.len()-1 {
+        vec.push(split[itr].parse::<f32>().unwrap());
+    }
+    let mut dif: f32 = vec[0] * 2.0;
+    for number in vec.iter() {
+        dif -= number;
+    }
+    println!("{}", dif);
+    return dif;
 } 
 
 /*
  * Info: multiplies numbers 
  * Args (inf): the numbers to multiply 
 */
-pub fn multiply() {
-
+pub fn multiply(command: String) -> f32 {
+    let mut vec: Vec<f32> = vec![];
+    let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
+    for itr in 2..split.len()-1 {
+        vec.push(split[itr].parse::<f32>().unwrap());
+    }
+    let mut product: f32 = 1.0;
+    for number in vec.iter() {
+        product *= number;
+    }
+    println!("{}", product);
+    return product;
 }
 
 /*
  * Info: divides numbers 
  * Args (2): first number is being divided by the next 
 */
-pub fn divide() {
-
+pub fn divide(command: String) -> f32 {
+    let mut vec: Vec<f32> = vec![];
+    let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
+    for itr in 2..split.len()-1 {
+        vec.push(split[itr].parse::<f32>().unwrap());
+    }
+    let mut quotient: f32 = vec[0];
+    vec.remove(0);
+    for number in vec.iter() {
+        quotient /= number;
+    }
+    println!("{}", quotient);
+    return quotient;
 }
 
 /*
  * Info: gets the remainder after dividing 
  * Args (2): first number is being divided by the next 
 */
-pub fn modulo() {
+pub fn modulo(command: String) -> f32 {
+    let split: Vec<&str> = command.split(|c| c == ' ' || c == ')' || c == '(').collect(); 
+    let num1: f32 = split[2].parse::<f32>().unwrap();
+    let num2: f32 = split[3].parse::<f32>().unwrap();
 
+    println!("{}", num1 % num2);
+    return num1 % num2;
 }
 
 /*

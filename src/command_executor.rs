@@ -19,27 +19,27 @@ pub fn execute_command(command: String) {
             return;
         }
         else if &command_info.0 == "+" {
-            masp_stdlib::add();
+            masp_stdlib::add(command);
             return;
         }
         else if &command_info.0 == "-" {
-            masp_stdlib::subtract();
+            masp_stdlib::subtract(command);
             return;
         }
         else if &command_info.0 == "*" {
-            masp_stdlib::multiply();
+            masp_stdlib::multiply(command);
             return;
         }
         else if &command_info.0 == "/" {
-            masp_stdlib::divide();
+            masp_stdlib::divide(command);
             return;
         }
         else if &command_info.0 == "%" {
-            masp_stdlib::modulo();
+            masp_stdlib::modulo(command);
             return;
         }
         else if &command_info.0 == "help" {
-            let subcommand: &str = &command[1..command.len()-2];
+            let subcommand: &str = &command[1..command.len()-3];
             let mut split: SplitWhitespace = subcommand.split_whitespace();  
             split.next();
             match split.next() {
